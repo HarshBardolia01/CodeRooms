@@ -1,4 +1,5 @@
 import express from "express";
+import { Logger } from "./src/util/logger";
 import { Express, Request, Response } from "express";
 const port = 8000;
 
