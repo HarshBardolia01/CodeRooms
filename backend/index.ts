@@ -1,25 +1,46 @@
 import express from "express";
-import { Logger } from "./src/util/logger";
+import cors from "cors";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
+import helmet from "helmet";
+import morgan from "morgan";
 import { Express, Request, Response } from "express";
-import { Ok } from "./src/response/http-responses";
-const port = 8000;
+import { connectDB } from "./src/database/connectDB";
 
+dotenv.config({ path: "./src/config/config.env" });
 const app: Express = express();
+const port = parseInt(process.env.PORT as string, 10);
 
-app.get("/hi", (req: Request, res: Response) => {
-    res.send("Hiiii!!!!");
-});
+const allowedOrigins = (process.env.ALLOWED_ORIGINS)?.split('\n');
 
-app.get("/", (req: Request, res: Response) => {
-    return Ok(
-        res,
-        "this is from index page!",
-        {
-            testing: "hello"
-        }
-    );
-});
+const start = async () => {
+    await connectDB();
 
-app.listen(port, () => {
-    console.log(`now listening on http://localhost:${port}/`);
+    app.listen(port, () => {
+        console.log(`Server running on http://localhost:${port}`);
+    });
+};
+
+start();
+
+app.use(express.json());
+app.use(
+    cors({
+        origin: allowedOrigins,
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE"],
+    })
+);
+
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(morgan("dev"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get("/", (
+    request: Request,
+    response: Response
+): Response => {
+    return response.send("Hello from CodeRoomsss!");
 });
