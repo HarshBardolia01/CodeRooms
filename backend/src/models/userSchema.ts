@@ -2,12 +2,6 @@ import mongoose from "mongoose";
 import validator from "validator";
 
 const userSchema = new mongoose.Schema({
-    handle: {
-        type: String,
-        unique: true,
-        required: [true, "Codeforces Handle is Required!"]
-    },
-
     email: {
         type: String,
         required: [true, "Email is required"],
@@ -42,33 +36,35 @@ const userSchema = new mongoose.Schema({
         type: String
     },
 
-    rating: {
-        type: Number
-    },
-
-    maxRating: {
-        type: Number
-    },
-
     friendOfCount: {
         type: Number
     },
 
     avatar: {
+        type: String,
+        required: [true, "Profile picture should be there"],
+        default: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+    },
+
+    coverPhoto: {
         type: String
     },
 
-    titlePhoto: {
+    about: {
         type: String
     },
 
-    rank: {
+    twitterLink: {
+        type: String
+    },
+    
+    linkedinLink: {
         type: String
     },
 
-    maxRank: {
+    website: {
         type: String
-    },
+    }
 });
 
 const UserMaster = mongoose.model("User", userSchema);
