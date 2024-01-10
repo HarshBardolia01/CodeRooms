@@ -15,6 +15,8 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
+    "colors.ts": "^1.0.12",
+    "colorts": "^0.1.63",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",

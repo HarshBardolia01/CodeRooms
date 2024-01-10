@@ -9,22 +9,20 @@ import { connectDB } from "./src/database/connectDB";
 import jwt from "jsonwebtoken";
 import { authentication, authorization } from "./src/middleware/userAuth";
 import { Roles } from "./src/dto/user-dto";
+import 'colorts/lib/string';
 
 dotenv.config({ path: "./src/config/config.env" });
 const app: Express = express();
-const port = parseInt(process.env.PORT as string, 10);
+const PORT = parseInt(process.env.PORT as string, 10);
+
+// await connectDB();
 
 const allowedOrigins = (process.env.ALLOWED_ORIGINS)?.split('\n');
 
-const start = async () => {
-    // await connectDB();
-
-    app.listen(port, () => {
-        console.log(`Server running on http://localhost:${port}`);
-    });
-};
-
-start();
+const server = app.listen(
+    PORT, () => {
+    console.log(`\nServer running on http://localhost:${port}`.yellow);
+});
 
 app.use(express.json());
 app.use(
