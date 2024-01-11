@@ -4,25 +4,27 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
+import 'colorts/lib/string';
 import { Express, Request, Response } from "express";
 import { connectDB } from "./src/database/connectDB";
 import jwt from "jsonwebtoken";
 import { authentication, authorization } from "./src/middleware/userAuth";
 import { Roles } from "./src/dto/user-dto";
-import 'colorts/lib/string';
+import router from "./src/router";
 
 dotenv.config({ path: "./src/config/config.env" });
 const app: Express = express();
 const PORT = parseInt(process.env.PORT as string, 10);
 
-// await connectDB();
-
-const allowedOrigins = (process.env.ALLOWED_ORIGINS)?.split('\n');
+connectDB();
 
 const server = app.listen(
     PORT, () => {
-    console.log(`\nServer running on http://localhost:${port}`.yellow);
-});
+        console.log(`\nServer running on http://localhost:${PORT}`.yellow);
+    }
+);
+
+const allowedOrigins = (process.env.ALLOWED_ORIGINS)?.split('\n');
 
 app.use(express.json());
 app.use(
@@ -66,3 +68,5 @@ app.get("/",
     ): Response => {
     return response.send("Welcome to CodeRooms!");
 });
+
+app.use("/api/v1", router);
