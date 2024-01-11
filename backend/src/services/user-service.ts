@@ -114,14 +114,26 @@ export const updateById = async (
     request: any,
 ): Promise<any> => {
     try {
-        let where: { [key: string]: any }[] = [];
-        where.push({ id: id });
-
         const result = await UserMaster.updateOne(
-            { ...request },
-            { where: where }
+            { _id: id },
+            { ...request }
         );
 
+        if (!result) return false;
+        return result;
+
+    } catch (error: any) {
+        console.error(`Error: ${error.message}`.red.bold);
+        throw error;
+    }
+};
+
+export const deleteById = async (
+    id: string
+): Promise<any> => {
+    try {
+        const result = await UserMaster.deleteOne({ _id: id });
+        
         if (!result) return false;
         return result;
 

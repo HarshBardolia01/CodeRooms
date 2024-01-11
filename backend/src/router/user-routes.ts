@@ -18,4 +18,14 @@ router.get(
     userController.getById
 );
 
+router.put(
+    "/updateById/:id",
+    userController.updateById
+);
+
+router.delete(
+    "/deleteById/:id",
+    userController.deleteById
+);
+
 export default router;

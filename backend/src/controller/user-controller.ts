@@ -112,3 +112,66 @@ export const getById = async (
         );
     }
 };
+
+export const updateById = async (
+    request: Request,
+    response: Response
+) => {
+    try {
+        const id = request.params.id;
+        const userInfo = await userService.getById(id);
+
+        if (!userInfo) {
+            return responses.NotFound(
+                response,
+                "User not found",
+            );
+        }
+
+        const user = request.body;
+        const result = await userService.updateById(id, user);
+
+        return responses.Ok(
+            response,
+            "Updated Successfully",
+            result
+        );
+
+    } catch (error) {
+        return responses.HandleAllError(
+            response,
+            error
+        );
+    }
+};
+
+export const deleteById = async (
+    request: Request,
+    response: Response
+) => {
+    try {
+        const id = request.params.id;
+        const user = await userService.getById(id);
+
+        if (!user) {
+            return responses.NotFound(
+                response,
+                "No such User Found",
+            );
+        }
+
+        const result = await userService.deleteById(id);
+
+        return responses.Ok(
+            response,
+            "User Deleted Successfully",
+            result
+        );
+
+    } catch (error) {
+        return responses.HandleAllError(
+            response,
+            error
+        );
+    }
+};
