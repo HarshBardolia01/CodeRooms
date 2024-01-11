@@ -24,14 +24,14 @@ export const create = async (
     try {
         const {
             email,
-            password,
+            hashedPassword,
             firstName,
             lastName
         } = request;
 
         const result = await UserMaster.create({
             email,
-            password,
+            password: hashedPassword,
             firstName,
             lastName
         });
@@ -46,11 +46,50 @@ export const create = async (
 };
 
 export const getById = async (
-    id: mongoose.Types.ObjectId
+    id: string
+): Promise<any> => {
+    try {
+        const result = await UserMaster.findById(id, attributes);
+
+        if (!result) {
+            return null;
+        }
+
+        const userInfo = new UserDto(result);
+        return userInfo;
+
+    } catch (error: any) {
+        console.error(`Error: ${error.message}`.red.bold);
+        throw error;
+    }
+};
+
+export const getAll = async (): Promise<any> => {
+    try {
+        const result = await UserMaster.find();
+
+        if (!result) {
+            return null;
+        }
+
+        const users: Array<UserDto> = result.map((userInfo) => {
+            const user = new UserDto(userInfo);
+            return user;
+        });
+
+        return users;
+    } catch (error: any) {
+        console.error(`Error: ${error.message}`.red.bold);
+        throw error;
+    }
+};
+
+export const getByEmail = async (
+    email: string
 ): Promise<any> => {
     try {
         let where: { [key: string]: any }[] = [];
-        where.push({ id: id });
+        where.push({ email: email });
 
         const result = await UserMaster.findOne({
             attributes: attributes,
@@ -63,6 +102,28 @@ export const getById = async (
 
         const userInfo = new UserDto(result);
         return userInfo;
+
+    } catch (error: any) {
+        console.error(`Error: ${error.message}`.red.bold);
+        throw error;
+    }
+};
+
+export const updateById = async (
+    id: string,
+    request: any,
+): Promise<any> => {
+    try {
+        let where: { [key: string]: any }[] = [];
+        where.push({ id: id });
+
+        const result = await UserMaster.updateOne(
+            { ...request },
+            { where: where }
+        );
+
+        if (!result) return false;
+        return result;
 
     } catch (error: any) {
         console.error(`Error: ${error.message}`.red.bold);

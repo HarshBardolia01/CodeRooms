@@ -9,7 +9,6 @@ export const connectDB = async () => {
             useUnifiedTopology: true,
         } as ConnectOptions);
 
-        Logger.info(`MongoDB Connected: ${con.connection.host}`.cyan.underline);
         console.log(`MongoDB Connected: ${con.connection.host}`.cyan.underline);
 
     } catch (error: any) {

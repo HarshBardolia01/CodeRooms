@@ -8,4 +8,14 @@ router.post(
     userController.create
 );
 
+router.get(
+    "/getAll",
+    userController.getAll
+);
+
+router.get(
+    "/getById/:id",
+    userController.getById
+);
+
 export default router;

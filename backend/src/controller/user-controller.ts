@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
 import * as userService from "../services/user-service";
 import * as responses from "../response/http-responses";
 import { UserDto } from "../dto/user-dto";
@@ -30,9 +31,13 @@ export const create = async (
             );
         }
 
+        const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS as string, 10);
+        const salt = await bcrypt.genSalt(saltRounds);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         const userInfo: UserDto = await userService.create({
             email,
-            password,
+            hashedPassword,
             firstName,
             lastName
         });
@@ -41,6 +46,63 @@ export const create = async (
             response,
             "User Successfully Created",
             userInfo
+        );
+
+    } catch (error) {
+        return responses.HandleAllError(
+            response,
+            error
+        );
+    }
+};
+
+export const getAll = async (
+    request: Request,
+    response: Response
+) => {
+    try {
+        const result = await userService.getAll();
+
+        if (!result) {
+            return responses.NotFound(
+                response,
+                "No Users Found"
+            );
+        }
+
+        return responses.Ok(
+            response,
+            "Success",
+            { users: result }
+        );
+
+    } catch (error) {
+        return responses.HandleAllError(
+            response,
+            error
+        );
+    }
+};
+
+export const getById = async (
+    request: Request,
+    response: Response
+) => {
+    try {
+        const id = request.params.id;
+        const userInfo = await userService.getById(id);
+
+        if (!userInfo) {
+            return responses.NotFound(
+                response,
+                "No User Found"
+            );
+        }
+
+        return responses.Ok(
+            response,
+            "Success",
+            { userInfo }
         );
 
     } catch (error) {

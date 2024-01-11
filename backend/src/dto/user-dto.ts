@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export enum Roles {
     ADMIN = "Admin",
     USER = "User",
@@ -5,6 +7,7 @@ export enum Roles {
 };
 
 export class UserDto {
+    id: mongoose.Types.ObjectId | any = "";
     email: string = "";
     firstName: string = "";
     lastName: string = "";
@@ -20,6 +23,7 @@ export class UserDto {
     website: string = "";
 
     constructor(obj: any) {
+        this.id = obj && obj._id ? obj._id : "";
         this.email = obj && obj.email ? obj.email : "";
         this.firstName = obj && obj.firstName ? obj.firstName : "";
         this.lastName = obj && obj.lastName ? obj.lastName : "";
