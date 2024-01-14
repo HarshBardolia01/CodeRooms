@@ -3,8 +3,9 @@ import bcrypt from "bcrypt";
 import * as userService from "../services/user-service";
 import * as responses from "../response/http-responses";
 import { UserDto } from "../dto/user-dto";
+import jwt from "jsonwebtoken";
 
-export const create = async (
+export const signUp = async (
     request: Request,
     response: Response
 ) => {
@@ -45,7 +46,64 @@ export const create = async (
         return responses.Ok(
             response,
             "User Successfully Created",
-            userInfo
+            { userInfo }
+        );
+
+    } catch (error) {
+        return responses.HandleAllError(
+            response,
+            error
+        );
+    }
+};
+
+export const login = async (
+    request: Request,
+    response: Response
+) => {
+    try {
+        const { email, password } = request.body;
+
+        if (!email || !password) {
+            let notFound = !email ? "Email" : "Password";
+
+            return responses.NotFound(
+                response,
+                `${notFound} not found!`,
+            );
+        }
+
+        const userInfo = await userService.getByEmail(email);
+
+        if (!userInfo) {
+            return responses.NotFound(
+                response,
+                "User with such email id does not exist!",
+            );
+        }
+
+        const isPasswordCorrect = await bcrypt.compare(password, userInfo.password);
+
+        if (!isPasswordCorrect) {
+            return responses.UserUnAuthenticated(
+                response,
+                "Incorrect password."
+            );
+        }
+
+        const user = {
+            id: userInfo._id,
+            email: userInfo.email,
+            firstName: userInfo.firstName,
+            lastName: userInfo.lastName,
+        };
+
+        const token = await jwt.sign({ user }, process.env.JWT_SECRET_KEY as string);
+
+        return responses.Ok(
+            response,
+            "Logged in successfully",
+            { token: token }
         );
 
     } catch (error) {

@@ -4,7 +4,8 @@ const handleSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Types.ObjectId,
         ref: "User",
-        required: true
+        required: true,
+        unique: true
     },
 
     codeforces: {

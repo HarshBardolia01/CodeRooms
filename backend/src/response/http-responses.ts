@@ -22,6 +22,7 @@ export const Ok = (
     return response
         .status(StatusCodes.OK)
         .send({
+            status: true,
             message: message ? message : null,
             result: body ? body : null
         });
@@ -46,6 +47,7 @@ export const Created = (
     return response
         .status(StatusCodes.CREATED)
         .send({
+            status: true,
             message: message ? message : null,
             result: body ? body : null
         });
@@ -74,12 +76,14 @@ export const BadRequest = (
         ? response
             .status(StatusCodes.BAD_REQUEST)
             .send({
+                status: false,
                 message: message ? message : null,
                 error: body && Array.isArray(body) ? body : [body]
             })
         : response
             .status(StatusCodes.BAD_REQUEST)
             .send({
+                status: false,
                 message: message ? message : null
             });
 };
@@ -106,6 +110,7 @@ export const UserUnAuthenticated = (
     return response
         .status(StatusCodes.UNAUTHORIZED)
         .send({
+            status: false,
             errors: [
                 {
                     message: message ? message : "User is not authenticated",
@@ -137,6 +142,7 @@ export const Forbidden = (
     return response
         .status(StatusCodes.FORBIDDEN)
         .send({
+            status: false,
             errors: [
                 {
                     message: message ? message : "Access denied",
@@ -171,11 +177,31 @@ export const NotFound = (
     return response
         .status(StatusCodes.NOT_FOUND)
         .send({
+            status: false,
             errors: [
                 {
                     message: message ? message : "Request not found",
                     details: "The requested data is not found",
                     body: body ? body : null
+                }
+            ]
+        });
+};
+
+
+export const Conflict = (
+    response: Response,
+    message?: string
+): Response => {
+    Logger.error(message ? message : "Conflict occured");
+    return response
+        .status(StatusCodes.CONFLICT)
+        .send({
+            status: false,
+            errors: [
+                {
+                    message: message ? message : "Conflict occured",
+                    detail: "ToDo"
                 }
             ]
         });
@@ -210,6 +236,7 @@ export const InternalServer = (
     return response
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send({
+            status: false,
             errors: [
                 {
                     message: "Internal server error",
@@ -258,6 +285,7 @@ export const HandleAllError = (
     return response
         .status(statusCode)
         .send({
+            status: false,
             errors: errors
         });
 };

@@ -55,8 +55,7 @@ export const getById = async (
             return null;
         }
 
-        const userInfo = new UserDto(result);
-        return userInfo;
+        return result;
 
     } catch (error: any) {
         console.error(`Error: ${error.message}`.red.bold);
@@ -72,12 +71,7 @@ export const getAll = async (): Promise<any> => {
             return null;
         }
 
-        const users: Array<UserDto> = result.map((userInfo) => {
-            const user = new UserDto(userInfo);
-            return user;
-        });
-
-        return users;
+        return result;
     } catch (error: any) {
         console.error(`Error: ${error.message}`.red.bold);
         throw error;
@@ -88,20 +82,13 @@ export const getByEmail = async (
     email: string
 ): Promise<any> => {
     try {
-        let where: { [key: string]: any }[] = [];
-        where.push({ email: email });
-
-        const result = await UserMaster.findOne({
-            attributes: attributes,
-            where: where
-        });
+        const result = await UserMaster.findOne({ email: email });
 
         if (!result) {
             return null;
         }
 
-        const userInfo = new UserDto(result);
-        return userInfo;
+        return result;
 
     } catch (error: any) {
         console.error(`Error: ${error.message}`.red.bold);
@@ -133,7 +120,7 @@ export const deleteById = async (
 ): Promise<any> => {
     try {
         const result = await UserMaster.deleteOne({ _id: id });
-        
+
         if (!result) return false;
         return result;
 
