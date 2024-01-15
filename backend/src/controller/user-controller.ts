@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import * as userService from "../services/user-service";
 import * as responses from "../response/http-responses";
 import { UserDto } from "../dto/user-dto";
-import jwt from "jsonwebtoken";
 
 export const signUp = async (
     request: Request,

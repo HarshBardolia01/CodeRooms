@@ -41,10 +41,10 @@ const handleSchema = new mongoose.Schema({
         type: String
     },
 
-    newtonSchool : {
+    newtonSchool: {
         type: String
     },
 });
 
-const handleMaster = mongoose.model("Handle", handleSchema);
-export default handleMaster;
+const HandleMaster = mongoose.model("Handle", handleSchema);
+export default HandleMaster;

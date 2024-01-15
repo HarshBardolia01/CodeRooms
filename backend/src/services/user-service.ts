@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import UserMaster from "../models/userSchema";
 import { UserDto } from "../dto/user-dto";
 

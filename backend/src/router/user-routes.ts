@@ -24,6 +24,7 @@ router.get(
 
 router.get(
     "/getById/:id",
+    authentication,
     userController.getById
 );
 
